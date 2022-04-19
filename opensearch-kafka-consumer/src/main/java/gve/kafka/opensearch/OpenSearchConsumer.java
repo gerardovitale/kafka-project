@@ -5,8 +5,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.opensearch.OpenSearchStatusException;
+import org.opensearch.action.bulk.BulkRequest;
+import org.opensearch.action.bulk.BulkResponse;
 import org.opensearch.action.index.IndexRequest;
-import org.opensearch.action.index.IndexResponse;
 import org.opensearch.client.RequestOptions;
 import org.opensearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
@@ -39,7 +40,10 @@ public class OpenSearchConsumer {
             openSearchClient.createIndex();
             logger.info("OpenSearch wikimedia index is created");
 
+
             while (true) {
+                BulkRequest bulkRequest = new BulkRequest();
+
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(3000));
                 int recordCount = records.count();
                 logger.info("Records received: " + recordCount);
@@ -49,16 +53,22 @@ public class OpenSearchConsumer {
                     IndexRequest indexRequest = new IndexRequest(config.getIndexName())
                             .source(record.value(), XContentType.JSON)
                             .id(recordId);
-                    IndexResponse response = openSearchClient.index(indexRequest, RequestOptions.DEFAULT);
-                    logger.info("Inserted 1 document into OpenSearch with id = " + response.getId());
+                    bulkRequest.add(indexRequest);
+                }
+                if (bulkRequest.numberOfActions() > 0) {
+                    BulkResponse bulkResponse = openSearchClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                    logger.info("Inserted " + bulkResponse.getItems().length + " record(s)");
+
+                    consumer.commitSync();
+                    logger.info("Offset has been committed");
                 }
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
 
-        } catch (OpenSearchStatusException ignored) {}
-
+        } catch (OpenSearchStatusException ignored) {
+        }
 
     }
 }

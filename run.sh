@@ -10,9 +10,9 @@ createKafkaTopics() {
     createKafkaTopics
 
   elif [[ $restProxyHealthCheck == 200 ]]; then
-    echo "[INFO] getting kafka cluster id"
     cluster_id=$(curl -s "$KAFKA_REST_PROXY_SERVER"/v3/clusters/ | grep -oE '"cluster_id":"(.*?)"' |
       sed -e 's/^"cluster_id":"//' -e 's/"$//')
+    echo "[INFO] getting kafka cluster id: $cluster_id"
 
     topic_res=$(curl -sw "%{http_code}" "$KAFKA_REST_PROXY_SERVER"/topics/"$KAFKA_TOPIC" | tail -c 3)
 
