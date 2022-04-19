@@ -1,5 +1,13 @@
 source ./.env
 
+startDockerEnv() {
+  if [[ $1 == prune ]]; then
+    docker-compose stop
+    docker container prune
+  fi
+  docker-compose up -d || exit 1
+}
+
 createKafkaTopics() {
   echo "[INFO] kafka-rest-proxy health-check"
   restProxyHealthCheck=$(curl -sw "%{http_code}" "$KAFKA_REST_PROXY_SERVER" | tail -c 3)
@@ -38,5 +46,5 @@ createKafkaTopics() {
 
 }
 
-docker-compose up -d || exit 1
+startDockerEnv "$@"
 createKafkaTopics
