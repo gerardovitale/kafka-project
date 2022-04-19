@@ -1,0 +1,85 @@
+version: "3.7"
+
+networks:
+  wikimedia_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.1
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka-broker
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.2
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_LISTENERS: CLIENT://:9092,EXTERNAL://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: CLIENT
+    depends_on:
+      - zookeeper
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:6.1.1
+    container_name: kafka-rest-proxy
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.3
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+    depends_on:
+      - kafka
+    hostname: rest-proxy
+
+  opensearch:
+    image: opensearchproject/opensearch:1.2.4
+    container_name: opensearch
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.4
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: "true"
+      compatibility.override_main_response_version: "true"
+
+# http://localhost:5601/app/dev_tools#/console
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:1.2.0
+    container_name: opensearch-dashboards
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.5
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+    depends_on:
+      - opensearch
