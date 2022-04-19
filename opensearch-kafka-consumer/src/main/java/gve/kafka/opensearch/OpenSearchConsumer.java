@@ -31,7 +31,7 @@ public class OpenSearchConsumer {
     }
 
     public static void main(String[] args) {
-        ConfigReader config = new ConfigReader();
+        ConfigReader config = ConfigReader.getInstance();
         KafkaConsumer<String, String> consumer = ConsumerFactory.createKafkaConsumer(config);
         consumer.subscribe(Collections.singleton(config.getTopic()));
         OpenSearchClient openSearchClient = OpenSearchClient.createOpenSearchClient(config);

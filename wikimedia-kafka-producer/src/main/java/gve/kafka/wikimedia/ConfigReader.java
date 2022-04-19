@@ -3,6 +3,7 @@ package gve.kafka.wikimedia;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConfigReader {
+    private static ConfigReader configObject;
     private final String bootStrapServers;
     private final String topic;
     private final String url;
@@ -11,7 +12,7 @@ public class ConfigReader {
     private final String compressionType;
 
 
-    public ConfigReader() {
+    private ConfigReader() {
         Dotenv dotenv = Dotenv.configure().load();
         this.bootStrapServers = dotenv.get("KAFKA_BOOTSTRAP_SERVER");
         this.topic = dotenv.get("KAFKA_TOPIC");
@@ -19,6 +20,13 @@ public class ConfigReader {
         this.lingerMilliSec = dotenv.get("KAFKA_LINGER_MS_CONFIG");
         this.batchSize = dotenv.get("KAFKA_BATCH_SIZE_CONFIG");
         this.compressionType = dotenv.get("KAFKA_COMPRESSION_TYPE_CONFIG");
+    }
+
+    public static ConfigReader getInstance() {
+        if (configObject == null) {
+            configObject = new ConfigReader();
+        }
+        return configObject;
     }
 
     public String getBootStrapServers() {

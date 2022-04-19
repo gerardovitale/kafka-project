@@ -3,6 +3,7 @@ package gve.kafka.opensearch;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConfigReader {
+    private static ConfigReader configObject;
     private final String bootStrapServers;
     private final String topic;
     private final String groupId;
@@ -11,7 +12,7 @@ public class ConfigReader {
     private final String indexName;
     private final String opensearchServer;
 
-    public ConfigReader() {
+    private ConfigReader() {
         Dotenv dotenv = Dotenv.configure().load();
         this.bootStrapServers = dotenv.get("KAFKA_BOOTSTRAP_SERVER");
         this.topic = dotenv.get("KAFKA_TOPIC");
@@ -20,6 +21,13 @@ public class ConfigReader {
         this.enableAutoCommit = dotenv.get("KAFKA_ENABLE_AUTO_COMMIT");
         this.opensearchServer = dotenv.get("OPENSEARCH_SERVER");
         this.indexName = dotenv.get("OPENSEARCH_INDEX");
+    }
+
+    public static ConfigReader getInstance() {
+        if (configObject == null) {
+            configObject = new ConfigReader();
+        }
+        return configObject;
     }
 
     public String getBootStrapServers() {

@@ -14,7 +14,7 @@ public class WikimediaProducer {
     private static final Logger logger = LoggerFactory.getLogger(WikimediaProducer.class.getSimpleName());
 
     public static void main(String[] args) throws InterruptedException {
-        ConfigReader config = new ConfigReader();
+        ConfigReader config = ConfigReader.getInstance();
 
         KafkaProducer<String, String> producer = ProducerFactory.createKafkaProducer(config);
 
