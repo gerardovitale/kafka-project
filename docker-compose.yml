@@ -69,8 +69,7 @@ services:
       plugins.security.disabled: "true"
       compatibility.override_main_response_version: "true"
 
-# http://localhost:5601/app/dev_tools#/console
-  opensearch-dashboards:
+  opensearch-dashboards: # http://localhost:5601/app/dev_tools#/console
     image: opensearchproject/opensearch-dashboards:1.2.0
     container_name: opensearch-dashboards
     networks:
