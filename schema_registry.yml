@@ -1,0 +1,28 @@
+schema-registry:
+  image: confluentinc/cp-schema-registry:6.1.1
+  hostname: schema-registry
+  networks:
+    enablers:
+      ipv4_address: 172.28.1.4
+  container_name: schema-registry
+  depends_on:
+    - kafka
+  ports:
+    - "8081:8081"
+  environment:
+    SCHEMA_REGISTRY_HOST_NAME: schema-registry
+    SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:9092
+    SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+kafka-ui:
+  image: provectuslabs/kafka-ui
+  container_name: kafka-ui
+  ports:
+    - "8080:8080"
+  networks:
+    enablers:
+      ipv4_address: 172.28.1.3
+  environment:
+    KAFKA_CLUSTERS_0_NAME: local
+    KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181

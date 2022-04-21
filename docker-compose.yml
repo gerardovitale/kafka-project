@@ -18,7 +18,7 @@ services:
     ports:
       - "2181:2181"
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      ALLOW_ANONYMOUS_LOGIN: "yes"
 
   kafka:
     image: bitnami/kafka:latest
@@ -26,8 +26,10 @@ services:
     networks:
       wikimedia_network:
         ipv4_address: 172.28.1.2
+    expose:
+      - "8080"
+      - "9092"
     ports:
-      - "9092:9092"
       - "9093:9093"
     environment:
       KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -36,6 +38,10 @@ services:
       KAFKA_CFG_LISTENERS: CLIENT://:9092,EXTERNAL://:9093
       KAFKA_CFG_ADVERTISED_LISTENERS: CLIENT://kafka:9092,EXTERNAL://localhost:9093
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: CLIENT
+      KAFKA_OPTS: "-javaagent:/metrics/jmx_prometheus_javaagent-0.16.1.jar=8080:/metrics/kafka-jmx-exporter-config.yml"
+    volumes:
+      - ./metrics/kafka/jmx_prometheus_javaagent-0.16.1.jar:/metrics/jmx_prometheus_javaagent-0.16.1.jar
+      - ./metrics/kafka/kafka-jmx-exporter-config.yml:/metrics/kafka-jmx-exporter-config.yml
     depends_on:
       - zookeeper
 
@@ -82,3 +88,30 @@ services:
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
     depends_on:
       - opensearch
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.6
+    volumes:
+      - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    networks:
+      wikimedia_network:
+        ipv4_address: 172.28.1.7
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./metrics/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+#      - ./metrics/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+#      - ./metrics/grafana/dashboard.json:/etc/grafana/provisioning/dashboard.json
+    depends_on:
+      - prometheus
+    restart: unless-stopped
