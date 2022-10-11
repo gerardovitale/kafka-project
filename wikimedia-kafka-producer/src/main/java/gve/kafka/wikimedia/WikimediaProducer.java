@@ -14,6 +14,7 @@ public class WikimediaProducer {
     private static final Logger logger = LoggerFactory.getLogger(WikimediaProducer.class.getSimpleName());
 
     public static void main(String[] args) throws InterruptedException {
+        logger.info("Getting configuration");
         ConfigReader config = ConfigReader.getInstance();
 
         KafkaProducer<String, String> producer = ProducerFactory.createKafkaProducer(config);
@@ -21,6 +22,8 @@ public class WikimediaProducer {
         EventHandler eventHandler = new WikimediaChangeHandler(producer, config.getTopic());
         EventSource.Builder builder = new EventSource.Builder(eventHandler, URI.create(config.getUrl()));
         EventSource eventSource = builder.build();
+
+        logger.info("Starting wkimedia producer!");
         eventSource.start();
 
         TimeUnit.MINUTES.sleep(10);
