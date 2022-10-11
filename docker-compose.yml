@@ -10,7 +10,7 @@ networks:
 services:
 
   zookeeper:
-    image: bitnami/zookeeper:latest
+    image: bitnami/zookeeper:3.8.0
     container_name: zookeeper
     networks:
       wikimedia_network:
@@ -21,7 +21,7 @@ services:
       ALLOW_ANONYMOUS_LOGIN: "yes"
 
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.3.1
     container_name: kafka-broker
     networks:
       wikimedia_network:
