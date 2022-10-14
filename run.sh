@@ -58,7 +58,7 @@ createKafkaTopics() {
 
   elif [[ $rest_proxy_health_check == 200 ]]; then
     getKafkaClusterId
-    createTopicByClusterId $cluster_id
+    createTopicByClusterId "$cluster_id"
 
   else
     logger "ERROR" "rest_proxy_health_check error code: $rest_proxy_health_check"
