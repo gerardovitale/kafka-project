@@ -3,7 +3,8 @@ package streamConsumer
 import dotenv.DotEnv
 
 class SparkDemoConfig {
-  private val dotEnv = DotEnv.envMap
+  private val envFile = ".env"
+  private val dotEnv = DotEnv.loadEnvFromFile(envFile)
   val sparkAppName: String = dotEnv.getOrElse("SPARK_APP_NAME", "")
   val sparkMaster: String = dotEnv.getOrElse("SPARK_MASTER", "")
   val kafkaServer: String = dotEnv.getOrElse("KAFKA_BOOTSTRAP_SERVER", "")

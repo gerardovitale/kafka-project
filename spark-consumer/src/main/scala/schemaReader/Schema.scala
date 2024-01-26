@@ -8,13 +8,14 @@ import scala.io.Source
 import scala.jdk.CollectionConverters.MapHasAsScala
 
 class Schema(yamlPath: String) {
-  private val yaml: Yaml = new Yaml()
 
-  private def readYaml(): Map[String, Any] = {
+  private def readYamlAsMap(): Map[String, Any] = {
     val yamlFile = Source.fromFile(yamlPath)
-    val yamlContent = yamlFile.mkString
-    yamlFile.close()
-    yaml.load(yamlContent).asInstanceOf[java.util.Map[String, Any]].asScala.toMap
+    val yamlContent = try yamlFile.mkString finally yamlFile.close()
+    new Yaml()
+      .load(yamlContent)
+      .asInstanceOf[java.util.Map[String, Any]]
+      .asScala.toMap
   }
 
   private def buildSparkSchema(yamlMap: Map[String, Any]): StructType = {
@@ -41,7 +42,7 @@ class Schema(yamlPath: String) {
   }
 
   def getSparkSchema: StructType = {
-    val yamlMap = readYaml()
+    val yamlMap = readYamlAsMap()
     buildSparkSchema(yamlMap)
   }
 }
