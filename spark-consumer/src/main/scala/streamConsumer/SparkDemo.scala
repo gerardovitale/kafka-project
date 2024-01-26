@@ -6,21 +6,21 @@ import schemaReader.Schema
 
 object SparkDemo {
 
-  private def exampleStreaming(): Unit = {
+  private def exampleStreaming(config: SparkDemoConfig): Unit = {
     val spark = SparkSession
       .builder
-      .appName("KafkaStreamExample")
-      .master("local[*]")
+      .appName(config.sparkAppName)
+      .master(config.sparkMaster)
       .getOrCreate()
 
     // Define Kafka parameters
     val kafkaParams = Map(
-      "kafka.bootstrap.servers" -> "127.0.0.1:9094",
-      "subscribe" -> "wikimedia.recent_changes",
+      "kafka.bootstrap.servers" -> config.kafkaServer,
+      "subscribe" -> config.kafkaTopic,
     )
 
     // Define the schema for incoming Kafka messages
-    val wikimediaSchema = new Schema("schemas/wikimedia-recentchange.yaml").getSparkSchema
+    val wikimediaSchema = new Schema(config.wikimediaSchemaPath).getSparkSchema
 
     // Read data from Kafka
     val kafkaDF = spark
@@ -46,6 +46,7 @@ object SparkDemo {
   }
 
   def main(args: Array[String]): Unit = {
-    exampleStreaming()
+    val config = new SparkDemoConfig
+    exampleStreaming(config)
   }
 }
