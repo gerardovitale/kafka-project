@@ -1,0 +1,123 @@
+title: wikimedia-recent-change
+description: >
+  Represents a MW RecentChange event.
+  https://www.mediawiki.org/wiki/Manual:RCFeed
+type: table
+
+columns:
+  - name: id
+    description: ID of the recentchange event (rcid).
+    type: integer
+    nullable: true
+
+  - name: type
+    description: >
+      Type of recentchange event (rc_type). One of "edit", "new", "log",
+      "categorize", or "external". (See Manual:Recentchanges table#rc_type)
+    type: string
+    nullable: true
+
+  - name: title
+    description: Full page name, from Title::getPrefixedText.
+    type: string
+    nullable: true
+
+  - name: namespace
+    description: >
+      ID of relevant namespace of affected page (rc_namespace, page_namespace).
+      This is -1 ("Special") for log events.
+    type: integer
+    nullable: true
+
+  - name: comment
+    description: (rc_comment)
+    type: string
+    nullable: true
+
+  - name: parsedcomment
+    description: The rc_comment parsed into simple HTML. Optional
+    type: string
+    nullable: true
+
+  - name: timestamp
+    description: Unix timestamp (derived from rc_timestamp).
+    type: integer
+    nullable: true
+
+  - name: user
+    description: (rc_user_text)
+    type: string
+    nullable: true
+
+  - name: bot
+    description: (rc_bot)
+    type: boolean
+    nullable: true
+
+  - name: server_url
+    description: $wgCanonicalServer
+    type: string
+    nullable: true
+
+  - name: server_name
+    description: $wgServerName
+    type: string
+    nullable: true
+
+  - name: server_script_path
+    description: $wgScriptPath
+    type: string
+    nullable: true
+
+  - name: wiki
+    description: wfWikiID ($wgDBprefix, $wgDBname)
+    type: string
+    nullable: true
+
+  - name: minor
+    description: (rc_minor).
+    type: boolean
+    nullable: true
+
+  - name: patrolled
+    description: >
+      (rc_patrolled). This property only exists if patrolling is supported
+      for this event (based on $wgUseRCPatrol, $wgUseNPPatrol).
+    type: boolean
+    nullable: true
+
+  - name: length
+    description: Length of old and new change
+    type: struct
+    nullable: true
+    nested: true
+
+  - name: revision
+    description: Old and new revision IDs
+    type: struct
+    nullable: true
+    nested: true
+
+  - name: log_id
+    description: (rc_log_id)
+    type: integer
+    nullable: true
+
+  - name: log_type
+    description: (rc_log_type)
+    type: string
+    nullable: true
+
+  - name: log_action
+    description: (rc_log_action)
+    type: string
+    nullable: true
+
+  - name: log_params
+    description: Property only exists if event has rc_params.
+    type: string
+    nullable: true
+
+  - name: log_action_comment
+    type: string
+    nullable: true

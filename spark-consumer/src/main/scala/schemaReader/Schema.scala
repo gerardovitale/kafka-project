@@ -19,25 +19,23 @@ class Schema(yamlPath: String) {
   }
 
   private def buildSparkSchema(yamlMap: Map[String, Any]): StructType = {
-    val propertiesMap = yamlMap("allOf")
-      .asInstanceOf[util.ArrayList[util.LinkedHashMap[String, util.LinkedHashMap[String, util.LinkedHashMap[Any, Any]]]]]
-      .get(1).get("properties")
-
-    val fieldArray = propertiesMap.keySet().toArray()
-
-    val structFields = fieldArray.map { field =>
-      val name = field.asInstanceOf[String]
-      val dataType = propertiesMap.get(name).get("type") match {
-        case "string" => StringType
-        case "integer" => IntegerType
-        case "long" => LongType
-        case "double" => DoubleType
-        case "boolean" => BooleanType
-        case _ => StringType
-        // case _ => throw new IllegalArgumentException(s"Unsupported data type for field $name")
-      }
-      StructField(name, dataType, nullable = true)
-    }
+    val structFields = yamlMap("columns").asInstanceOf[java.util.ArrayList[util.LinkedHashMap[String, String]]]
+      .toArray().map(column => {
+        val castColumn = column.asInstanceOf[util.LinkedHashMap[String, String]].asScala.toMap
+        val name: String = castColumn.getOrElse("name", "")
+        val dataType: DataType = castColumn.getOrElse("type", "") match {
+          case "string" => StringType
+          case "integer" => IntegerType
+          case "long" => LongType
+          case "double" => DoubleType
+          case "boolean" => BooleanType
+          case "binary" => BinaryType
+          case "timestamp" => TimestampType
+          case _ => StringType
+        }
+        val nullable: Boolean = castColumn.getOrElse("nullable", "true").asInstanceOf[Boolean]
+        StructField(name, dataType, nullable)
+      })
     StructType(structFields)
   }
 

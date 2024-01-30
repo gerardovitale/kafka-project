@@ -11,7 +11,7 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % sparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-streaming" % sparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion
-libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "3.2.1"
+libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion
 
 
 lazy val root = (project in file("."))
