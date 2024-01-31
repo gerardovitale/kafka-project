@@ -4,9 +4,9 @@ import org.apache.spark.sql.SparkSession
 import schemaReader.Schema
 import transformer.KafkaMessage
 
-object SparkDemo {
+object SparkStreamingApp {
 
-  private def exampleStreaming(): Unit = {
+  private def run(): Unit = {
     val config = new Configuration
     val spark = SparkSession.builder
       .appName(config.sparkAppName)
@@ -35,6 +35,6 @@ object SparkDemo {
   }
 
   def main(args: Array[String]): Unit = {
-    exampleStreaming()
+    run()
   }
 }
