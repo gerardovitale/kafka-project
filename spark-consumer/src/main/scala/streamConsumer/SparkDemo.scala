@@ -3,6 +3,7 @@ package streamConsumer
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, from_json}
 import schemaReader.Schema
+import transformation.KafkaMessage
 
 object SparkDemo {
 
@@ -23,10 +24,7 @@ object SparkDemo {
       .load()
 
     // Convert Kafka key-value messages to DataFrame
-    val processedDF = kafkaDF
-      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
-      .select(from_json(col("value"), wikimediaSchema).as("data"))
-      .select("data.*")
+    val processedDF = KafkaMessage.denormalize(kafkaDF, wikimediaSchema)
 
     // Define your processing logic here, for example, writing to console
     val query = processedDF.writeStream
