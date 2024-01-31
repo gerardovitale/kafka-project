@@ -6,7 +6,8 @@ import transformer.KafkaMessage
 
 object SparkDemo {
 
-  private def exampleStreaming(config: SparkDemoConfig): Unit = {
+  private def exampleStreaming(): Unit = {
+    val config = new Configuration
     val spark = SparkSession.builder
       .appName(config.sparkAppName)
       .master(config.sparkMaster)
@@ -34,7 +35,6 @@ object SparkDemo {
   }
 
   def main(args: Array[String]): Unit = {
-    val config = new SparkDemoConfig
-    exampleStreaming(config)
+    exampleStreaming()
   }
 }

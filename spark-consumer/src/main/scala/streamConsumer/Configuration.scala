@@ -2,7 +2,7 @@ package streamConsumer
 
 import dotenv.DotEnv
 
-class SparkDemoConfig {
+class Configuration {
   private val envFile = ".env"
   private val dotEnv = DotEnv.loadEnvFromFile(envFile)
 
