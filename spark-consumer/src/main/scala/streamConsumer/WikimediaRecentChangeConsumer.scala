@@ -4,7 +4,7 @@ import org.apache.spark.sql.SparkSession
 import schemaReader.Schema
 import transformer.KafkaMessage
 
-object SparkStreamingApp {
+object WikimediaRecentChangeConsumer {
 
   private def run(): Unit = {
     val config = new Configuration
