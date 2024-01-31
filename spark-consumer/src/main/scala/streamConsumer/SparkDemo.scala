@@ -2,7 +2,7 @@ package streamConsumer
 
 import org.apache.spark.sql.SparkSession
 import schemaReader.Schema
-import transformation.KafkaMessage
+import transformer.KafkaMessage
 
 object SparkDemo {
 

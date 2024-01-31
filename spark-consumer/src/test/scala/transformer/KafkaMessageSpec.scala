@@ -1,4 +1,4 @@
-package transformation
+package transformer
 
 import configTest.SparkSessionTestWrapper
 import org.apache.spark.sql.Row
