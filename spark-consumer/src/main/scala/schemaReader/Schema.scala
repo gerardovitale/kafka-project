@@ -9,6 +9,11 @@ import scala.jdk.CollectionConverters.MapHasAsScala
 
 class Schema(yamlPath: String) {
 
+  def getSparkSchema: StructType = {
+    val yamlMap = readYamlAsMap()
+    buildSparkSchema(yamlMap)
+  }
+
   private def readYamlAsMap(): Map[String, Any] = {
     val yamlFile = Source.fromFile(yamlPath)
     val yamlContent = try yamlFile.mkString finally yamlFile.close()
@@ -23,24 +28,23 @@ class Schema(yamlPath: String) {
       .toArray().map(column => {
         val castColumn = column.asInstanceOf[util.LinkedHashMap[String, String]].asScala.toMap
         val name: String = castColumn.getOrElse("name", "")
-        val dataType: DataType = castColumn.getOrElse("type", "") match {
-          case "string" => StringType
-          case "integer" => IntegerType
-          case "long" => LongType
-          case "double" => DoubleType
-          case "boolean" => BooleanType
-          case "binary" => BinaryType
-          case "timestamp" => TimestampType
-          case _ => StringType
-        }
+        val dataType: DataType = getDataType(castColumn)
         val nullable: Boolean = castColumn.getOrElse("nullable", "true").asInstanceOf[Boolean]
         StructField(name, dataType, nullable)
       })
     StructType(structFields)
   }
 
-  def getSparkSchema: StructType = {
-    val yamlMap = readYamlAsMap()
-    buildSparkSchema(yamlMap)
+  private def getDataType(column:  Map[String, String]): DataType = {
+    column.getOrElse("type", "") match {
+      case "string" => StringType
+      case "integer" => IntegerType
+      case "long" => LongType
+      case "double" => DoubleType
+      case "boolean" => BooleanType
+      case "binary" => BinaryType
+      case "timestamp" => TimestampType
+      case _ => StringType
+    }
   }
 }
