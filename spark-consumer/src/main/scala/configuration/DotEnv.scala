@@ -1,4 +1,4 @@
-package dotenv
+package configuration
 
 import scala.io.Source
 

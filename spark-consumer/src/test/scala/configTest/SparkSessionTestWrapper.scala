@@ -1,6 +1,6 @@
 package configTest
 
-import dotenv.DotEnv
+import configuration.DotEnv
 import org.apache.spark.sql.SparkSession
 import org.scalatest.{BeforeAndAfterAll, Suite}
 

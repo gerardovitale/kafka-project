@@ -1,6 +1,4 @@
-package streamConsumer
-
-import dotenv.DotEnv
+package configuration
 
 class Configuration {
   private val envFile = ".env"

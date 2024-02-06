@@ -1,4 +1,4 @@
-package schemaReader
+package configuration
 
 import org.apache.spark.sql.types._
 import org.yaml.snakeyaml.Yaml

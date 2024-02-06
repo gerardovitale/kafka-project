@@ -1,7 +1,7 @@
 package streamConsumer
 
+import configuration.{Configuration, Schema}
 import org.apache.spark.sql.SparkSession
-import schemaReader.Schema
 import transformer.KafkaMessage
 
 object WikimediaRecentChangeConsumer {

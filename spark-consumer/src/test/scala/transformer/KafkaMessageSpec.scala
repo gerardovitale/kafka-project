@@ -1,10 +1,10 @@
 package transformer
 
 import configTest.SparkSessionTestWrapper
+import configuration.Schema
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.scalatest.funsuite.AnyFunSuite
-import schemaReader.Schema
 
 import java.sql.Timestamp
 
