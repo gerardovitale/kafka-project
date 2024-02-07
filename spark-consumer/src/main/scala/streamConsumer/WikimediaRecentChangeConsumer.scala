@@ -1,6 +1,6 @@
 package streamConsumer
 
-import configuration.{Configuration, Schema}
+import configuration.{Configuration, DestinationConfig, PipelineConfigReader, Schema, Writer}
 import org.apache.spark.sql.SparkSession
 import transformer.KafkaMessage
 
@@ -8,6 +8,7 @@ object WikimediaRecentChangeConsumer {
 
   private def run(): Unit = {
     val config = new Configuration
+    val pipelineConfig = new PipelineConfigReader("pipeline.yaml")
     val spark = SparkSession.builder
       .appName(config.sparkAppName)
       .master(config.sparkMaster)
@@ -25,11 +26,8 @@ object WikimediaRecentChangeConsumer {
     val processedDF = KafkaMessage.denormalize(kafkaDF, wikimediaSchema)
 
     // Define your processing logic here, for example, writing to console
-    val query = processedDF.writeStream
-      .outputMode("append")
-      .format("console")
-      .option("truncate", value = false)
-      .start()
+    val writer = new Writer(pipelineConfig.getDestinationConfig("ingest"))
+    val query = writer.prepareRun(processedDF).start()
 
     query.awaitTermination()
   }

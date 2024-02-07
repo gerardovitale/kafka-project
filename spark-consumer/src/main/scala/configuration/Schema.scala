@@ -1,26 +1,15 @@
 package configuration
 
 import org.apache.spark.sql.types._
-import org.yaml.snakeyaml.Yaml
 
 import java.util
-import scala.io.Source
 import scala.jdk.CollectionConverters.MapHasAsScala
 
 class Schema(yamlPath: String) {
 
   def getSparkSchema: StructType = {
-    val yamlMap = readYamlAsMap()
+    val yamlMap = YamlReader.readAsMap(yamlPath)
     buildSparkSchema(yamlMap)
-  }
-
-  private def readYamlAsMap(): Map[String, Any] = {
-    val yamlFile = Source.fromFile(yamlPath)
-    val yamlContent = try yamlFile.mkString finally yamlFile.close()
-    new Yaml()
-      .load(yamlContent)
-      .asInstanceOf[java.util.Map[String, Any]]
-      .asScala.toMap
   }
 
   private def buildSparkSchema(yamlMap: Map[String, Any]): StructType = {
@@ -35,7 +24,7 @@ class Schema(yamlPath: String) {
     StructType(structFields)
   }
 
-  private def getDataType(column:  Map[String, String]): DataType = {
+  private def getDataType(column: Map[String, String]): DataType = {
     column.getOrElse("type", "") match {
       case "string" => StringType
       case "integer" => IntegerType
