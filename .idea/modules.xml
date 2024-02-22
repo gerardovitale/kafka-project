@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/kafka-project.iml" filepath="$PROJECT_DIR$/.idea/kafka-project.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/opensearch-kafka-consumer.iml" filepath="$PROJECT_DIR$/.idea/modules/opensearch-kafka-consumer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/opensearch-kafka-consumer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/opensearch-kafka-consumer.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spark-consumer/.idea/modules/spark-consumer.iml" filepath="$PROJECT_DIR$/spark-consumer/.idea/modules/spark-consumer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.iml" filepath="$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wikimedia-kafka-producer.test.iml" />

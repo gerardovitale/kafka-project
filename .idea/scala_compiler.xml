@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="spark-consumer" />
+    <profile name="sbt 1" modules="kafka-project.spark-consumer,spark-consumer,spark-consumer_4665,spark-consumer_9457" />
   </component>
 </project>
