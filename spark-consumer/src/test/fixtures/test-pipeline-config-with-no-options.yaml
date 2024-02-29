@@ -1,0 +1,6 @@
+pipeline:
+
+  - step: transformation
+    destination:
+      format: console
+      outputMode: append

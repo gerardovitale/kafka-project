@@ -1,3 +1,4 @@
+# pipeline example
 pipeline:
 
   - step: ingest
@@ -16,20 +17,3 @@ pipeline:
       outputMode: append
       options:
         path: data/bronze/wikimedia-recent-change
-
-
-  - step: transform
-    source:
-      format: parquet
-      path: data/bronze/wikimedia-recent-change
-      schema: wikimedia-recent-change
-
-    transformation:
-      schema: wikimedia-recent-change
-
-    destination:
-      format: parquet
-      outputMode: append
-      options:
-        path: data/silver/wikimedia-recent-change
-        checkpointLocation: path-to-checkpoint

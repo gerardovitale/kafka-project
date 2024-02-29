@@ -1,0 +1,56 @@
+title: cryptocom-ticker-date
+description: Represents a base kafka message
+type: table
+
+columns:
+  - name: highest
+    type: string
+    nullable: true
+
+  - name: lowest
+    type: string
+    nullable: true
+
+  - name: latest
+    type: string
+    nullable: true
+
+  - name: price_chance
+    type: string
+    nullable: true
+
+  - name: best_bid_price
+    type: string
+    nullable: true
+
+  - name: best_bid_size
+    type: string
+    nullable: true
+
+  - name: best_ask_price
+    type: string
+    nullable: true
+
+  - name: best_ask_size
+    type: string
+    nullable: true
+
+  - name: instrument_name
+    type: string
+    nullable: true
+
+  - name: traded_volume
+    type: string
+    nullable: true
+
+  - name: traded_volume_value
+    type: string
+    nullable: true
+
+  - name: open_interest
+    type: string
+    nullable: true
+
+  - name: trade_timestamp
+    type: long
+    nullable: true

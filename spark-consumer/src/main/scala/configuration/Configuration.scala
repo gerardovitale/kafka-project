@@ -20,7 +20,7 @@ class Configuration {
   )
 }
 
-class DestinationConfig(format: String, outputMode: String, options: Map[String, String]) {
+class DestinationConfig(format: String, outputMode: String, options: Map[String, String] = null) {
   def getFormat: String = format
 
   def getOutputMode: String = outputMode
@@ -58,7 +58,9 @@ class PipelineConfigReader(yamlPath: String) {
     if (destinationConfigMap == null) return null
     val format = destinationConfigMap.get("format").asInstanceOf[String]
     val outputMode = destinationConfigMap.get("outputMode").asInstanceOf[String]
-    val options = destinationConfigMap.get("options").asInstanceOf[util.LinkedHashMap[String, String]].asScala.toMap
-    new DestinationConfig(format, outputMode, options)
+    val options = destinationConfigMap.getOrDefault("options", "")
+    if (options == "") return new DestinationConfig(format, outputMode)
+    val optionsMap = options.asInstanceOf[util.LinkedHashMap[String, String]].asScala.toMap
+    new DestinationConfig(format, outputMode, optionsMap)
   }
 }

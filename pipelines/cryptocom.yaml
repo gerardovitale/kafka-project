@@ -1,0 +1,16 @@
+pipeline:
+
+  - step: ingest
+    source:
+      format: kafka
+      options:
+        kafka.bootstrap.servers: localhost:9094
+        subscribe: crypto.ticker.btc_eur
+        startingOffsets: latest
+
+    transformation:
+      schema: null
+
+    destination:
+      format: console
+      outputMode: append

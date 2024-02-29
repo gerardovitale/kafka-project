@@ -3,7 +3,7 @@ package configuration
 import org.scalatest.funsuite.AnyFunSuite
 
 class ConfigurationSpec extends AnyFunSuite {
-  test("get destination config") {
+  test("get destination config when it contains format, outputMode and options") {
     val testYamlPath: String = "spark-consumer/src/test/fixtures/test-pipeline-config.yaml"
     val testPipelineConfig = new PipelineConfigReader(testYamlPath)
 
@@ -35,5 +35,22 @@ class ConfigurationSpec extends AnyFunSuite {
     assert(actualStep2DestinationConfig.getFormat == expectedStep2DestinationConfig.getFormat)
     assert(actualStep2DestinationConfig.getOutputMode == expectedStep2DestinationConfig.getOutputMode)
     assert(actualStep2DestinationConfig.getOptionsMap == expectedStep2DestinationConfig.getOptionsMap)
+  }
+
+  test("get destination config when does not contains any options") {
+    val testYamlPath: String = "spark-consumer/src/test/fixtures/test-pipeline-config-with-no-options.yaml"
+    val testPipelineConfig = new PipelineConfigReader(testYamlPath)
+
+    // step: transformation
+    val expectedStep1DestinationConfig = new DestinationConfig(
+      format = "console",
+      outputMode = "append"
+    )
+
+    val actualStep1DestinationConfig = testPipelineConfig.getDestinationConfig("transformation")
+
+    assert(actualStep1DestinationConfig.getFormat == expectedStep1DestinationConfig.getFormat)
+    assert(actualStep1DestinationConfig.getOutputMode == expectedStep1DestinationConfig.getOutputMode)
+    assert(actualStep1DestinationConfig.getOptionsMap == expectedStep1DestinationConfig.getOptionsMap)
   }
 }
